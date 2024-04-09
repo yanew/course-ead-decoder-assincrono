@@ -22,7 +22,9 @@ spring:
   output:
     ansi:
       enabled: Always 
-        
+  rabbitmq:
+    addresses: amqps://lgzglgzz:QCdrVDcoffePpevW6Rp8T3BiuPz_zcC5@shark.rmq.cloudamqp.com/lgzglgzz    
+    
 logging:
   level:
     com.ead: TRACE
