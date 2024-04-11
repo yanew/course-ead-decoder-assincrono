@@ -38,7 +38,7 @@ public class UserModel implements Serializable {
     private String userStatus;
     @Column(nullable = false)
     private String userType;
-    @Column(length = 11)
+    @Column(length = 14)
     private String cpf;
     @Column
     private String imageUrl;
