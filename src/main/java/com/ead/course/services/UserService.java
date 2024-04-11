@@ -1,5 +1,6 @@
 package com.ead.course.services;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -15,6 +16,8 @@ public interface UserService {
 	public UserModel save(UserModel userModel);
 
 	public void delete(UUID userId);
+
+	public Optional<UserModel> findById(UUID userId);
 
 
 }

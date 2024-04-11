@@ -20,5 +20,9 @@ public interface CourseService {
 	//public Page<CourseModel> findAll(SpecificationTemplate.CourseSpec spec, Pageable pageable);
 	
 	public Page<CourseModel> findAll(Specification<CourseModel> spec, Pageable pageable);
+
+	public boolean existsByCourseAndUser(UUID courseId, UUID userId);
+
+	public void saveSubscriptionUserInCourse(UUID courseId, UUID userId);
 	
 }

@@ -1,5 +1,6 @@
 package com.ead.course.services.impl;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable) {
-		return findAll(spec, pageable);
+		return userRepository.findAll(spec, pageable);
 	}
 
 	@Override
@@ -31,6 +32,11 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void delete(UUID userId) {
 		userRepository.deleteById(userId);
+	}
+
+	@Override
+	public Optional<UserModel> findById(UUID userId) {
+		return userRepository.findById(userId);
 	}
 	
 }

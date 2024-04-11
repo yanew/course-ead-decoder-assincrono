@@ -1,5 +1,6 @@
 package com.ead.course.validations;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,9 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import com.ead.course.dtos.CourseDto;
+import com.ead.course.enums.UserType;
+import com.ead.course.models.UserModel;
+import com.ead.course.services.UserService;
 
 @Component
 public class CourseValidator implements Validator{
@@ -16,6 +20,9 @@ public class CourseValidator implements Validator{
 	@Autowired
 	@Qualifier("defaultValidator")
 	private Validator validator;
+	
+	@Autowired
+	private UserService userService;
 	
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -32,17 +39,15 @@ public class CourseValidator implements Validator{
 	}
 
 	private void validateUserInstructor(UUID userInstructor, Errors errors) {
-		/*ResponseEntity<UserDto> responseUserInstructor;
-		try {
-			responseUserInstructor = authUserClient.getOneUserById(userInstructor);
-			if(responseUserInstructor.getBody().getUserType().equals(UserType.STUDENT)) {
+		Optional<UserModel> userModelOptional = userService.findById(userInstructor);
+		
+		if(userModelOptional.isPresent()) {
+			if(userModelOptional.get().getUserType().equals(UserType.STUDENT.toString())) {
 				errors.rejectValue("userInstructor", "UserInstructorError", "É necessário que o usuário seja INSTRUCTOR ou ADMIN para criar um curso!");
 			}
-		}catch(HttpStatusCodeException e) {
-			if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-				errors.rejectValue("userInstructor", "UserInstructorError","Instrutor não encontrado!");
-			}
-		}*/
+		}else {
+			errors.rejectValue("userInstructor", "UserInstructorError","Instrutor não encontrado!");
+		}
 	}
 	
 }
