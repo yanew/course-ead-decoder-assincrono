@@ -70,7 +70,7 @@ public class CourseUserController {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário está bloqueado!");
 		}
 		
-		courseService.saveSubscriptionUserInCourse(courseModelOptional.get().getCourseId(), userModelOptional.get().getUserId());
+		courseService.saveSubscriptionUserInCourseAndSendNotification(courseModelOptional.get(), userModelOptional.get());
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body("Inscrição criada com sucesso!");
 	}
