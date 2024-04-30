@@ -5,10 +5,12 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import com.ead.course.configs.security.AuthenticationCurrentUserService;
 import com.ead.course.dtos.CourseDto;
 import com.ead.course.enums.UserType;
 import com.ead.course.models.UserModel;
@@ -23,6 +25,9 @@ public class CourseValidator implements Validator{
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	AuthenticationCurrentUserService authenticationCurrentUserService;
 	
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -39,15 +44,24 @@ public class CourseValidator implements Validator{
 	}
 
 	private void validateUserInstructor(UUID userInstructor, Errors errors) {
-		Optional<UserModel> userModelOptional = userService.findById(userInstructor);
-		
-		if(userModelOptional.isPresent()) {
-			if(userModelOptional.get().getUserType().equals(UserType.STUDENT.toString())) {
-				errors.rejectValue("userInstructor", "UserInstructorError", "É necessário que o usuário seja INSTRUCTOR ou ADMIN para criar um curso!");
-			}
-		}else {
-			errors.rejectValue("userInstructor", "UserInstructorError","Instrutor não encontrado!");
+		UUID currentUserId = authenticationCurrentUserService.getCurrentUser().getUserId();
+			
+		if(currentUserId.equals(userInstructor)) {
+			Optional<UserModel> userModelOptional = userService.findById(userInstructor);
+			
+			if(userModelOptional.isPresent()) {
+				if(userModelOptional.get().getUserType().equals(UserType.STUDENT.toString())) {
+					errors.rejectValue("userInstructor", "UserInstructorError", "É necessário que o usuário seja INSTRUCTOR ou ADMIN para criar um curso!");
+				}
+			}else {
+				errors.rejectValue("userInstructor", "UserInstructorError","Instrutor não encontrado!");
+			}	
+		} else {
+			throw new AccessDeniedException("Acesso proibido");
 		}
+		
+		
+		
 	}
 	
 }
