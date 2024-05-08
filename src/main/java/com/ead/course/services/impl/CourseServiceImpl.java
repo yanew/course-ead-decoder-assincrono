@@ -80,6 +80,7 @@ public class CourseServiceImpl implements CourseService{
 
 	@Override
 	public Page<CourseModel> findAll(Specification<CourseModel> spec, Pageable pageable) {
+		log.info("ENTROU NO findAll DO SERVICE DE COURSE");
 		return courseRepository.findAll(spec, pageable);
 	}
 
