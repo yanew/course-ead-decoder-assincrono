@@ -34,6 +34,9 @@ import com.ead.course.services.CourseService;
 import com.ead.course.specifications.SpecificationTemplate;
 import com.ead.course.validations.CourseValidator;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/courses")
@@ -93,11 +96,13 @@ public class CourseController {
 	public ResponseEntity<Page<CourseModel>> getAllCourses(SpecificationTemplate.CourseSpec spec,
 			@PageableDefault(page = 0, size = 1, sort = "courseId", direction = Sort.Direction.ASC) Pageable pageable,
 			@RequestParam(required=false)UUID userId){
-		
+		log.info("ENTROU NO getAllCourses");
 		if(userId!=null) {
+			log.info("ENTROU NO userId!=null");
 			return ResponseEntity.status(HttpStatus.OK).body(
 					courseService.findAll(SpecificationTemplate.courseUserId(userId).and(spec), pageable));	
 		}else {
+			log.info("ENTROU NO ELSE DO userId!=null");
 			return ResponseEntity.status(HttpStatus.OK).body(courseService.findAll(spec, pageable));
 		}
 	}
